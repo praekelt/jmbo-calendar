@@ -1,20 +1,17 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='panya-calendar',
+    name='jmbo-calendar',
     version='0.0.2',
-    description='Panya calendar app.',
+    description='Jmbo calendar app.',
     long_description = open('README.rst', 'r').read(),
     author='Praekelt Foundation',
     author_email='dev@praekelt.com',
     license='BSD',
-    url='http://github.com/praekelt/panya-calendar',
+    url='http://github.com/praekelt/jmbo-calendar',
     packages = find_packages(),
-    dependency_links = [
-        'https://github.com/praekelt/panya/tarball/master#egg=panya',
-    ],
     install_requires = [
-        'panya',
+        'jmbo',
     ],
     include_package_data=True,
     classifiers = [

@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from django.db import models
 
 from cal.managers import PermittedManager
-from panya.models import ModelBase
+from jmbo.models import ModelBase
 
 def save_handler_does_not_repeat(entry):
     # raise an error if wrong handler is triggered
@@ -156,7 +156,7 @@ class EntryAbstract(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField()
     content = models.ForeignKey(
-        'panya.ModelBase',
+        'jmbo.ModelBase',
     )
     class Meta():
         abstract = True

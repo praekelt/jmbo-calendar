@@ -8,7 +8,7 @@ from django.db import models as django_models
 
 from cal import models
 from cal.models import Calendar, Entry, EntryItem
-from panya.models import ModelBase
+from jmbo.models import ModelBase
 
 class WantedContent(ModelBase):
     pass

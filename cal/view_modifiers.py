@@ -1,8 +1,8 @@
 import calendar
 from datetime import datetime, timedelta
 
-from panya.view_modifiers import ViewModifier
-from panya.view_modifiers.items import GetItem
+from jmbo.view_modifiers import ViewModifier
+from jmbo.view_modifiers.items import GetItem
 
 class EntryByWeekdayItem(GetItem):
     def __init__(self, request, title, get, date, default):
