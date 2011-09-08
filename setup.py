@@ -1,10 +1,4 @@
 from setuptools import setup, find_packages
-from setuptools.command.test import test
-
-def run_tests(self):
-    from setuptest.runtests import runtests
-    return runtests(self)
-test.run_tests = run_tests
 
 setup(
     name='jmbo-calendar',
@@ -20,9 +14,9 @@ setup(
         'jmbo',
     ],
     tests_require=[
-        'django-setuptest',
+        'django-setuptest>=0.0.6',
     ],
-    test_suite="cal.tests",
+    test_suite="setuptest.SetupTestSuite",
     include_package_data=True,
     classifiers = [
         "Programming Language :: Python",
