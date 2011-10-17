@@ -10,3 +10,5 @@ INSTALLED_APPS = [
     'publisher',
     'secretballot',
 ]
+
+SITE_ID = 1
