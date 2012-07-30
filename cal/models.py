@@ -343,11 +343,35 @@ class Event(ModelBase):
         return end - start
     
     @property
-    def next_date(self):
-        now = deltatime.now()
-        if repeat != 'does_not_repeat' and now <= repeat_until:
-                if repeat == 'daily':
-                    
+    def next(self):
+        now = datetime.now()
+        # if the first iteration of the event has not yet ended
+        if now < self.end:
+            return self.start
+        # calculate next repeat of event
+        else if repeat_until is None or now <= repeat_until:
+            if repeat == 'does_not_repeat':
+                return None
+            else:
+                if now.timetz() < self.end.timetz():
+                    if repeat == 'daily':
+                        date = now.date()
+                    elif repeat == 'monthly_by_day_of_month':
+                        pass
+                    else:
+                        weekday = now.weekday()
+                        if repeat == 'weekdays':
+                            date = now.replace(day=now.day + 7 - weekday).date() \
+                                if (weekday == 5 or weekday == 6) else now.date()
+                        elif repeat == 'weekends':
+                            date = now.replace(day=now.day + (5 - weekday)).date() \
+                                if (0 <= weekday <= 4) else now.date()
+                        else:  # must be weekly
+                            (weekday + x) % 7 = self.start.weekday()
+                            date = now.replace(day=now.day + (self.start.weekday() - weekday)).date()
+                else:
+                    date = now.replace(day=now.day + 1).date()
+                return datetime.combine(date, self.start.timetz())
         return None
     
     class Meta:
