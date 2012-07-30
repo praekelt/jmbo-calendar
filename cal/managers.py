@@ -1,12 +1,10 @@
 from datetime import datetime, timedelta
 
-from django.conf import settings
-from django.contrib.contenttypes.models import ContentType
-from django.db import models
 from django.db.models.query import Q
 
+from jmbo import managers
 
-class EntryItemQuerySet(models.query.QuerySet):
+'''class EntryItemQuerySet(models.query.QuerySet):
     def by_model(self, model):
         """
         Should only return entry items for content of the provided model.
@@ -117,4 +115,12 @@ class PermittedManager(models.Manager):
         return self.get_query_set().thismonth()
 
     def upcoming(self):
-        return self.get_query_set().upcoming()
+        return self.get_query_set().upcoming()'''
+
+
+class PermittedManager(managers.PermittedManager):
+    
+    def upcoming(self):
+        qs = super(PermittedManager, self).get_query_set()
+        now = datetime.now()
+        qs.exclude(end__lt=now, Q(repeat='does_not_repeat') | Q(repeat_until__lt=now))

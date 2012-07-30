@@ -1,13 +1,14 @@
 from django.contrib import admin
 
-from cal.models import Calendar, Entry
 from jmbo.admin import ModelBaseAdmin
 
+from cal.models import Calendar, Event
 
-class EntryAdmin(admin.ModelAdmin):
-    list_display = ('content', 'start', 'end', 'repeat', 'repeat_until')
+
+class EventAdmin(ModelBaseAdmin):
+    list_display = ('title', 'start', 'end', 'repeat', 'repeat_until', 'venue')
     list_filter = ('repeat',)
-    search_fields = ('content__title', 'content__description')
+
 
 admin.site.register(Calendar, ModelBaseAdmin)
-admin.site.register(Entry, EntryAdmin)
+admin.site.register(Event, EventAdmin)

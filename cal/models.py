@@ -2,11 +2,15 @@ from datetime import datetime, timedelta
 
 from django.db import models
 
-from cal.managers import PermittedManager
 from jmbo.models import ModelBase
+from jmbo.managers import DefaultManager
+
+from atlas.models import Location
+
+from cal.managers import PermittedManager
 
 
-def save_handler_does_not_repeat(entry):
+'''def save_handler_does_not_repeat(entry):
     # raise an error if wrong handler is triggered
     if entry.repeat != 'does_not_repeat':
         raise Exception("In handler 'save_handler_does_not_repeat' for entry \
@@ -214,6 +218,8 @@ class EntryAbstract(models.Model):
 
 
 class Entry(EntryAbstract):
+    start = models.DateTimeField()
+    end = models.DateTimeField()
     repeat = models.CharField(
         max_length=64,
         choices=(
@@ -289,4 +295,67 @@ class EntryItem(EntryAbstract):
         return self.end - self.start
 
     class Meta():
-        ordering = ('start',)
+        ordering = ('start',)'''
+
+
+class Calendar(ModelBase):
+    
+    class Meta:
+        verbose_name = "Calendar"
+        verbose_name_plural = "Calendars"
+
+
+class Event(ModelBase):
+    objects = DefaultManager()
+    permitted = PermittedManager()
+    
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    repeat = models.CharField(
+        max_length=64,
+        choices=(
+            ('does_not_repeat', 'Does Not Repeat'),
+            ('daily', 'Daily'),
+            ('weekdays', 'Weekdays'),
+            ('weekends', 'Weekends'),
+            ('weekly', 'Weekly'),
+            ('monthly_by_day_of_month', 'Monthly By Day Of Month'),
+        ),
+        default='does_not_repeat',
+    )
+    repeat_until = models.DateField(
+        blank=True,
+        null=True,
+    )
+    calendars = models.ManyToManyField(
+        Calendar,
+        blank=True,
+        null=True
+    )
+    venue = models.ForeignKey(
+        Location,
+        help_text='Venue where the event will take place.'
+    )    
+    content = RichTextField(help_text='Full article detailing this event.')
+    
+    @property
+    def duration(self):
+        return end - start
+    
+    @property
+    def next_date(self):
+        now = deltatime.now()
+        if repeat != 'does_not_repeat' and now <= repeat_until:
+                if repeat == 'daily':
+                    
+        return None
+    
+    class Meta:
+        ordering = ('start', )
+    
+    def save(self, *args, **kwargs):
+        # calculate repeat_until date that is the exact cutoff of final repeat (makes upcoming query easier)
+        print(args)
+        print(kwargs)
+        
+        super(Event, self).save(*args, **kwargs)
