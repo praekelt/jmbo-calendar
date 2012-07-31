@@ -12,11 +12,13 @@ setup(
     packages = find_packages(),
     install_requires = [
         'jmbo',
+        'django-ckeditor',
+        'django-atlas',
     ],
     tests_require=[
         'django-setuptest>=0.0.6',
     ],
-    test_suite="setuptest.SetupTestSuite",
+    test_suite="setuptest.setuptest.SetupTestSuite",
     include_package_data=True,
     classifiers = [
         "Programming Language :: Python",
