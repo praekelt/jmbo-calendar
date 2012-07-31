@@ -5,6 +5,8 @@ from django.db import models
 from jmbo.models import ModelBase
 from jmbo.managers import DefaultManager
 
+from ckeditor.fields import RichTextField
+
 from atlas.models import Location
 
 from cal.managers import PermittedManager
@@ -306,6 +308,13 @@ class Calendar(ModelBase):
 
 
 class Event(ModelBase):
+    parent_ptr = models.OneToOneField(
+        ModelBase,
+        primary_key=True,
+        parent_link=True,
+        related_name='+'
+    )
+    
     objects = DefaultManager()
     permitted = PermittedManager()
     
@@ -328,9 +337,10 @@ class Event(ModelBase):
         null=True,
     )
     calendars = models.ManyToManyField(
-        Calendar,
+        'cal.Calendar',
         blank=True,
-        null=True
+        null=True,
+        related_name='event_calendar',
     )
     venue = models.ForeignKey(
         Location,
@@ -349,37 +359,36 @@ class Event(ModelBase):
         if now < self.end:
             return self.start
         # calculate next repeat of event
-        else if repeat_until is None or now <= repeat_until:
-            if repeat == 'does_not_repeat':
-                return None
+        elif self.repeat != 'does_not_repeat' and (self.repeat_until is None or now <= self.repeat_until):
+            if now.timetz() < self.end.timetz() or self.duration() > (self.start.replace(hour=23, minute=59, second=59, microsecond=999999) - self.start): 
+                date = self._next_repeat(now.date())
             else:
-                if now.timetz() < self.end.timetz():
-                    if repeat == 'daily':
-                        date = now.date()
-                    elif repeat == 'monthly_by_day_of_month':
-                        pass
-                    else:
-                        weekday = now.weekday()
-                        if repeat == 'weekdays':
-                            date = now.replace(day=now.day + 7 - weekday).date() \
-                                if (weekday == 5 or weekday == 6) else now.date()
-                        elif repeat == 'weekends':
-                            date = now.replace(day=now.day + (5 - weekday)).date() \
-                                if (0 <= weekday <= 4) else now.date()
-                        else:  # must be weekly
-                            (weekday + x) % 7 = self.start.weekday()
-                            date = now.replace(day=now.day + (self.start.weekday() - weekday)).date()
-                else:
-                    date = now.replace(day=now.day + 1).date()
+                date = self._next_repeat(now.date().replace(day=now.day + 1))
+            
+            if date <= self.repeat_until:
                 return datetime.combine(date, self.start.timetz())
         return None
     
+    # calculate the next repeat - does not take into account repeat_until and assumes the event repeats
+    def _next_repeat(self, date):
+        if self.repeat == 'daily':
+            return date
+        elif self.repeat == 'monthly_by_day_of_month':
+            date = date.replace(day=self.start.day) if date.day <= self.start.day \
+                else date.replace(day=self.start.day, month=date.month + 1)
+        else:
+            weekday = date.weekday()
+            if self.repeat == 'weekdays':
+                date = date.replace(day=date.day + 7 - weekday) \
+                    if (weekday == 5 or weekday == 6) else date
+            elif self.repeat == 'weekends':
+                date = date.replace(day=date.day + (5 - weekday)) \
+                    if (0 <= weekday <= 4) else date
+            else:  # must be weekly
+                date = date.replace(day=date.day + (self.start.weekday() - weekday)) \
+                    if self.start.weekday() >= weekday else \
+                    date.replace(day=date.day + (7 - weekday + self.start.weekday()))
+        return date
+
     class Meta:
         ordering = ('start', )
-    
-    def save(self, *args, **kwargs):
-        # calculate repeat_until date that is the exact cutoff of final repeat (makes upcoming query easier)
-        print(args)
-        print(kwargs)
-        
-        super(Event, self).save(*args, **kwargs)

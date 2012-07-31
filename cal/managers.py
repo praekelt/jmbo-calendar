@@ -123,4 +123,4 @@ class PermittedManager(managers.PermittedManager):
     def upcoming(self):
         qs = super(PermittedManager, self).get_query_set()
         now = datetime.now()
-        qs.exclude(end__lt=now, Q(repeat='does_not_repeat') | Q(repeat_until__lt=now))
+        qs.exclude(Q(end__lt=now) & (Q(repeat='does_not_repeat') | Q(repeat_until__lt=now)))
