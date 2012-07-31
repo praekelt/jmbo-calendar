@@ -6,7 +6,8 @@ from cal.models import Calendar, Event
 
 
 class EventAdmin(ModelBaseAdmin):
-    list_display = ('title', 'start', 'end', 'next', 'repeat', 'repeat_until', 'venue')
+    list_display = ('title', 'start', 'end', 'next',
+        'repeat', 'repeat_until', 'venue')
     list_filter = ('repeat',)
 
 

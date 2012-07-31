@@ -14,7 +14,7 @@ from cal.managers import PermittedManager
 
 
 class Calendar(ModelBase):
-    
+
     class Meta:
         verbose_name = "Calendar"
         verbose_name_plural = "Calendars"
@@ -27,10 +27,10 @@ class Event(ModelBase):
         parent_link=True,
         related_name='+'
     )
-    
+
     objects = DefaultManager()
     coordinator = PermittedManager()
-    
+
     start = models.DateTimeField()
     end = models.DateTimeField()
     repeat = models.CharField(
@@ -60,13 +60,13 @@ class Event(ModelBase):
         help_text='Venue where the event will take place.',
         blank=True,
         null=True,
-    )    
+    )
     content = RichTextField(help_text='Full article detailing this event.')
-    
+
     @property
     def duration(self):
-        return end - start
-    
+        return self.end - self.start
+
     @property
     def next(self):
         now = datetime.now()
@@ -74,26 +74,31 @@ class Event(ModelBase):
         if now < self.end:
             return self.start
         # calculate next repeat of event
-        elif self.repeat != 'does_not_repeat' and (self.repeat_until is None or now <= self.repeat_until):
-            if now.timetz() < self.end.timetz() or self.duration() > (self.start.replace(hour=23, minute=59, second=59, microsecond=999999) - self.start): 
+        elif self.repeat != 'does_not_repeat' and \
+                (self.repeat_until is None or now.date() <= self.repeat_until):
+            if now.timetz() < self.end.timetz() or self.duration > \
+                    (self.start.replace(hour=23, minute=59, second=59,
+                    microsecond=999999) - self.start):
                 date = self._next_repeat(now.date())
             else:
                 date = self._next_repeat(now.date() + timedelta(days=1))
-            
+
             if date <= self.repeat_until:
                 return datetime.combine(date, self.start.timetz())
         return None
-    
-    # calculate the next repeat - does not take into account repeat_until and assumes the event repeats
+
+    # calculate the next repeat, ignores repeat_until and assumes repetition
     def _next_repeat(self, date):
         if self.repeat == 'daily':
             return date
         elif self.repeat == 'monthly_by_day_of_month':
             if date.day > self.start.day:  # skip to next month
-                date = date.replace(day=1, month=(date.month+1)%12, year=date.year+math.floor((date.month+1)/12))
+                date = date.replace(day=1, month=(date.month + 1) % 12,
+                        year=date.year + math.floor((date.month + 1) / 12))
 
             if self.start.day > calendar.monthrange(date.year, date.month)[1]:
-                date = date.replace(day=calendar.monthrange(date.year, date.month)[1]
+                date = date.replace(day=calendar.monthrange(date.year,
+                        date.month)[1])
             else:
                 date = date.replace(day=self.start.day)
         else:
@@ -115,22 +120,27 @@ class Event(ModelBase):
         if self.repeat != 'does_not_repeat':
             if self.repeat_until is not None:
                 next = self._next_repeat(self.repeat_until)
-                if next.date() > self.repeat_until:
+                if next > self.repeat_until:
                     if self.repeat == 'daily':
                         raise ValueError('This should not be possible')
                     elif self.repeat == 'weekly':
                         self.repeat_until = next - timedelta(days=7)
                     elif self.repeat == 'weekdays':
-                        self.repeat_until = self.repeat_until - timedelta(days=self.repeat_until.weekday() - 4)
+                        self.repeat_until = self.repeat_until - \
+                            timedelta(days=self.repeat_until.weekday() - 4)
                     elif self.repeat == 'weekends':
-                        self.repeat_until = self.repeat_until - timedelta(days=self.repeat_until.weekday() + 1)
+                        self.repeat_until = self.repeat_until - \
+                            timedelta(days=self.repeat_until.weekday() + 1)
                     else:  # must be 'monthly_by_day_of_month'
-                        self.repeat_until = next - timedelta(days=calendar.monthrange(self.repeat_until.year, self.repeat_until.month)[1])
-                elif next.date() < self.repeat_until:
-                    raise ValueError('The repeat_until date is too early and the event will never be repeated.')
+                        self.repeat_until = next - timedelta(days=
+                                calendar.monthrange(self.repeat_until.year,
+                                self.repeat_until.month)[1])
+                elif next < self.repeat_until:
+                    raise ValueError('''The repeat_until date is too early
+                            and the event will never be repeated.''')
         else:
             self.repeat_until = None
-        
+
         super(Event, self).save(*args, **kwargs)
 
     class Meta:
