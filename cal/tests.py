@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db import models
+from django.utils import timezone
 
 from cal.models import Calendar, Event
 
@@ -12,7 +13,7 @@ from cal.models import Calendar, Event
 class CalTestCase(TestCase):
 
     def setUp(self):
-        self.dt = datetime.now()
+        self.dt = timezone.now()
 
     def make_published_events(self):
         hour1 = timedelta(hours=1)

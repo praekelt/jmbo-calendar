@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import calendar
 
 from django.db import models
+from django.utils import timezone
 
 from jmbo.models import ModelBase
 from jmbo.managers import DefaultManager
@@ -63,13 +64,16 @@ class Event(ModelBase):
     )
     content = RichTextField(help_text='Full article detailing this event.')
 
+    class Meta:
+        ordering = ('start', )
+
     @property
     def duration(self):
         return self.end - self.start
 
     @property
     def next(self):
-        now = datetime.now()
+        now = timezone.now()
         # if the first iteration of the event has not yet ended
         if now < self.end:
             return self.start
@@ -142,6 +146,3 @@ class Event(ModelBase):
             self.repeat_until = None
 
         super(Event, self).save(*args, **kwargs)
-
-    class Meta:
-        ordering = ('start', )

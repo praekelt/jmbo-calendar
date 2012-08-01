@@ -11,9 +11,9 @@ setup(
     url='http://github.com/praekelt/jmbo-calendar',
     packages = find_packages(),
     install_requires = [
-        'jmbo',
-        'django-ckeditor',
+        'jmbo-foundry>=0.5.1',
         'django-atlas',
+        'pytz',
     ],
     tests_require=[
         'django-setuptest>=0.0.6',
