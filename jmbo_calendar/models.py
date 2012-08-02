@@ -11,7 +11,7 @@ from ckeditor.fields import RichTextField
 
 from atlas.models import Location
 
-from cal.managers import PermittedManager
+from jmbo_calendar.managers import CoordinatorManager
 
 
 class Calendar(ModelBase):
@@ -30,7 +30,7 @@ class Event(ModelBase):
     )
 
     objects = DefaultManager()
-    coordinator = PermittedManager()
+    coordinator = CoordinatorManager()
 
     start = models.DateTimeField()
     end = models.DateTimeField()
@@ -51,7 +51,7 @@ class Event(ModelBase):
         null=True,
     )
     calendars = models.ManyToManyField(
-        'cal.Calendar',
+        'jmbo_calendar.Calendar',
         blank=True,
         null=True,
         related_name='event_calendar',

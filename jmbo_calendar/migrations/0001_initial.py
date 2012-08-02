@@ -7,15 +7,19 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("atlas", "0001_initial"),
+    )
+    
     def forwards(self, orm):
         # Adding model 'Calendar'
-        db.create_table('cal_calendar', (
+        db.create_table('jmb_calendar_calendar', (
             ('modelbase_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['jmbo.ModelBase'], unique=True, primary_key=True)),
         ))
-        db.send_create_signal('cal', ['Calendar'])
+        db.send_create_signal('jmb_calendar', ['Calendar'])
 
         # Adding model 'Event'
-        db.create_table('cal_event', (
+        db.create_table('jmb_calendar_event', (
             ('parent_ptr', self.gf('django.db.models.fields.related.OneToOneField')(related_name='+', unique=True, primary_key=True, to=orm['jmbo.ModelBase'])),
             ('start', self.gf('django.db.models.fields.DateTimeField')()),
             ('end', self.gf('django.db.models.fields.DateTimeField')()),
@@ -24,26 +28,26 @@ class Migration(SchemaMigration):
             ('venue', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['atlas.Location'])),
             ('content', self.gf('ckeditor.fields.RichTextField')()),
         ))
-        db.send_create_signal('cal', ['Event'])
+        db.send_create_signal('jmb_calendar', ['Event'])
 
         # Adding M2M table for field calendars on 'Event'
-        db.create_table('cal_event_calendars', (
+        db.create_table('jmb_calendar_event_calendars', (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('event', models.ForeignKey(orm['cal.event'], null=False)),
-            ('calendar', models.ForeignKey(orm['cal.calendar'], null=False))
+            ('event', models.ForeignKey(orm['jmb_calendar.event'], null=False)),
+            ('calendar', models.ForeignKey(orm['jmb_calendar.calendar'], null=False))
         ))
-        db.create_unique('cal_event_calendars', ['event_id', 'calendar_id'])
+        db.create_unique('jmb_calendar_event_calendars', ['event_id', 'calendar_id'])
 
 
     def backwards(self, orm):
         # Deleting model 'Calendar'
-        db.delete_table('cal_calendar')
+        db.delete_table('jmb_calendar_calendar')
 
         # Deleting model 'Event'
-        db.delete_table('cal_event')
+        db.delete_table('jmb_calendar_event')
 
         # Removing M2M table for field calendars on 'Event'
-        db.delete_table('cal_event_calendars')
+        db.delete_table('jmb_calendar_event_calendars')
 
 
     models = {
@@ -110,13 +114,13 @@ class Migration(SchemaMigration):
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         },
-        'cal.calendar': {
+        'jmb_calendar.calendar': {
             'Meta': {'ordering': "('-created',)", 'object_name': 'Calendar', '_ormbases': ['jmbo.ModelBase']},
             'modelbase_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['jmbo.ModelBase']", 'unique': 'True', 'primary_key': 'True'})
         },
-        'cal.event': {
+        'jmb_calendar.event': {
             'Meta': {'ordering': "('start',)", 'object_name': 'Event', '_ormbases': ['jmbo.ModelBase']},
-            'calendars': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'event_calendar'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['cal.Calendar']"}),
+            'calendars': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'event_calendar'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['jmb_calendar.Calendar']"}),
             'content': ('ckeditor.fields.RichTextField', [], {}),
             'end': ('django.db.models.fields.DateTimeField', [], {}),
             'parent_ptr': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'+'", 'unique': 'True', 'primary_key': 'True', 'to': "orm['jmbo.ModelBase']"}),
@@ -231,4 +235,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['cal']
+    complete_apps = ['jmb_calendar']

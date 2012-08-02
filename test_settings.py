@@ -113,7 +113,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-    'cal',
+    'jmbo_calendar',
     'jmbo',
     'photologue',
     'category',

@@ -7,10 +7,10 @@ from django.contrib.sites.models import Site
 from django.db import models
 from django.utils import timezone
 
-from cal.models import Calendar, Event
+from jmbo_calendar.models import Calendar, Event
 
 
-class CalTestCase(TestCase):
+class JmboCalendarTestCase(TestCase):
 
     def setUp(self):
         self.dt = timezone.now()

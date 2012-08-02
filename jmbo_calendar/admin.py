@@ -3,7 +3,7 @@ from django import forms
 
 from jmbo.admin import ModelBaseAdmin, ModelBaseAdminForm
 
-from cal.models import Calendar, Event
+from jmbo_calendar.models import Calendar, Event
 
 
 class EventAdminForm(ModelBaseAdminForm):
