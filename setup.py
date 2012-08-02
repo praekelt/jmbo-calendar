@@ -14,9 +14,11 @@ setup(
         'jmbo-foundry>=0.5.1',
         'django-atlas',
         'pytz',
+        'django>=1.4'
     ],
     tests_require=[
         'django-setuptest>=0.0.6',
+        'pysqlite>=2.5'
     ],
     test_suite="setuptest.setuptest.SetupTestSuite",
     include_package_data=True,

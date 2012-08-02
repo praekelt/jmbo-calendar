@@ -20,8 +20,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.mysql',
-        'NAME': 'cal',
+        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
+        'NAME': 'test_cal.db',
         'USER': 'test_cal',
         'PASSWORD': 'test_cal',
         'HOST': 'localhost',
