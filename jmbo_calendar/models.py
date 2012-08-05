@@ -56,12 +56,6 @@ class Event(ModelBase):
         null=True,
         related_name='event_calendar',
     )
-    venue = models.ForeignKey(
-        Location,
-        help_text='Venue where the event will take place.',
-        blank=True,
-        null=True,
-    )
     content = RichTextField(help_text='Full article detailing this event.')
 
     class Meta:

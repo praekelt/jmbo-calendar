@@ -27,7 +27,7 @@ class EventAdmin(ModelBaseAdmin):
     form = EventAdminForm
 
     list_display = ('title', 'start', 'end', 'next',
-        'repeat', 'repeat_until', 'venue')
+        'repeat', 'repeat_until', 'location')
     list_filter = ('repeat',)
 
 
