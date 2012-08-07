@@ -1,0 +1,29 @@
+{% load jmbo_template_tags foundry_tags jmbo_calendar_tags i18n %}
+
+<a href="{{ object.get_absolute_url }}">
+    <img src="{{ object.get_listing_vertical_thumbnail_LAYER_url }}" alt="{{ object.title }}" class="left" />
+</a>
+
+<div class="title">
+    {% if object.categories.all.count %}<span class="category">{{ object.categories.all|join_titles }}:</span>{% endif %}
+    <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+</div>
+<div class="meta datetime">{{ object|scheduled_for }}</div>
+{% block location %}
+    {% if object.location %}
+        <div class="meta location">
+            Venue: {{ object.location.name }}
+            {% if show_distance and object.distance %}
+                ({% widthratio object.distance 1000 1 %} km away)
+            {% endif %}
+            {% if object.location.address %}
+                <br/>{{ object.location.address }}
+            {% endif %}
+            {% if object.location.coordinates %}
+                <br/><a href="{{ object.location.get_google_map_url }}">View on Google Maps</a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% include "includes/list_meta.html" %}
