@@ -8,7 +8,7 @@
     {% if object.categories.all.count %}<span class="category">{{ object.categories.all|join_titles }}:</span>{% endif %}
     <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
 </div>
-<div class="meta datetime">{{ object.start|naturalday:"D d N 'y" }} at {{ object.start|time:"G:i" }}</div>
+<div class="meta datetime">{{ object.next|naturalday:"D d N 'y" }} at {{ object.next|time:"G:i" }}</div>
 
 {% if object.location %}
     <div class="meta location">

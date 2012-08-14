@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import calendar
+import math
 
 from django.db import models
 from django.utils import timezone
@@ -81,7 +82,7 @@ class Event(ModelBase):
             else:
                 date = self._next_repeat(now.date() + timedelta(days=1))
 
-            if date <= self.repeat_until:
+            if self.repeat_until is None or date <= self.repeat_until:
                 return datetime.combine(date, self.start.timetz())
         return None
 
