@@ -30,8 +30,8 @@ class ObjectList(GenericObjectList):
         return 10
 
         
-obj_list = ObjectList()
+_obj_list = ObjectList()
 
 @location_required(override_old=False)
 def object_list(*args, **kwargs):
-    return obj_list.__call__(*args, **kwargs)
+    return _obj_list.__call__(*args, **kwargs)

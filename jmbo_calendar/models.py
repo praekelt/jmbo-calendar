@@ -33,8 +33,8 @@ class Event(ModelBase):
     objects = DefaultManager()
     coordinator = CoordinatorManager()
 
-    start = models.DateTimeField()
-    end = models.DateTimeField()
+    start = models.DateTimeField(db_index=True)
+    end = models.DateTimeField(db_index=True)
     repeat = models.CharField(
         max_length=64,
         choices=(
@@ -55,9 +55,9 @@ class Event(ModelBase):
         'jmbo_calendar.Calendar',
         blank=True,
         null=True,
-        related_name='event_calendar',
+        related_name='event_calendars',
     )
-    content = RichTextField(help_text='Full article detailing this event.')
+    content = RichTextField(help_text='The event description.')
 
     class Meta:
         ordering = ('start', )
