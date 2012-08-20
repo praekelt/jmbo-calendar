@@ -9,7 +9,7 @@
     <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
 </div>
 <div class="meta">
-    <div class="datetime">{{ object.next|naturalday:"D d N 'y" }} at {{ object.next|time:"G:i" }}</div>
+    <div class="datetime">{{ object.next|naturalday:"D d N 'y" }} {% trans "at" %} {{ object.next|time:"G:i" }}</div>
 
 {% if object.location %}
         <div class="venue">{% trans "Venue" %}: {{ object.location.name }}</div>
