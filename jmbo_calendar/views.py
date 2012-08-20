@@ -20,6 +20,7 @@ class ObjectList(GenericObjectList):
     def get_queryset(self, *args, **kwargs):
         request = args[0]
         qs = Event.coordinator.upcoming()
+        qs = qs.filter(location__country=request.session['location']['city'].country_id)
         position = request.session['location']['position']
         if not isinstance(position, Point):
             position = request.session['location']['city'].coordinates
