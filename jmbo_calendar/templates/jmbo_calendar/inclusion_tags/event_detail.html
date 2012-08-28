@@ -4,7 +4,7 @@
     {% if object.image %}
         <img src="{{ object.image_detail_url }}" />
     {% endif %}
-    <p>{{ object.content }}</p>
+    {{ object.content|safe }}
     <div class="meta">
         {% trans "When" %}: <div class="datetime">{{ object.next|naturalday:"D d N 'y" }} {% trans "at" %} {{ object.next|time:"G:i" }}</div>
         {% if object.location %}
