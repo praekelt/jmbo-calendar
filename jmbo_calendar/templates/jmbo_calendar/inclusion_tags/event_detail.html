@@ -14,7 +14,7 @@
                 <div class="address">{{ object.location.address }}</div>
             {% endif %}
             {% if object.location.coordinates %}
-                <div class="google-maps-link"><a href="{{ object.location.get_google_map_url }}">{% trans "View on Google Maps" %}</a></div>
+                <div class="google-maps-link"><a href="{{ object.location.get_google_map_url }}" target="_blank">{% trans "View on Google Maps" %}</a></div>
             {% endif %}
         {% endif %}
     </div>

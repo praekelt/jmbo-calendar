@@ -32,6 +32,13 @@ class Event(ModelBase):
 
     objects = DefaultManager()
     coordinator = CoordinatorManager()
+    
+    external_link = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text="The url of the event's external webpage, if there is one."
+    )
 
     start = models.DateTimeField(db_index=True)
     end = models.DateTimeField(db_index=True)
