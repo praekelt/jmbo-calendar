@@ -93,7 +93,7 @@ class Event(ModelBase):
         elif self.repeat == 'monthly_by_day_of_month':
             if date.day > self.start.day:  # skip to next month
                 date = date.replace(day=1, month=(date.month + 1) % 12,
-                        year=date.year + math.floor((date.month + 1) / 12))
+                        year=date.year + int(math.floor((date.month + 1) / 12)))
 
             if self.start.day > calendar.monthrange(date.year, date.month)[1]:
                 date = date.replace(day=calendar.monthrange(date.year,
