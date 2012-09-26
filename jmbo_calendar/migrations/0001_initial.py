@@ -9,6 +9,7 @@ class Migration(SchemaMigration):
 
     depends_on = (
         ("atlas", "0001_initial"),
+        ("foundry", "0038_auto__chg_field_country_title__chg_field_country_slug"),
     )
     
     def forwards(self, orm):
