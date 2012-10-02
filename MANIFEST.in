@@ -2,3 +2,5 @@ include AUTHORS.rst
 include CHANGELOG.rst
 include LICENSE
 include README.rst
+recursive-include jmbo_calendar/migrations *
+recursive-include jmbo_calendar/templates *
