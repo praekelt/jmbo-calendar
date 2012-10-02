@@ -1,0 +1,28 @@
+{% load jmbo_template_tags foundry_tags i18n humanize %}
+
+<a href="{{ object.get_absolute_url }}">
+    <img src="{{ object.get_listing_vertical_thumbnail_LAYER_url }}" alt="{{ object.title }}" class="left" />
+</a>
+
+<div class="title">
+    {% if object.categories.all.count %}<span class="category">{{ object.categories.all|join_titles }}:</span>{% endif %}
+    <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+</div>
+<div class="meta">
+    <div class="datetime">{{ object.next|naturalday:"D d N 'y" }} {% trans "at" %} {{ object.next|time:"G:i" }}</div>
+
+{% if object.location %}
+        <div class="venue">{% trans "Venue" %}: {{ object.location.name }}</div>
+        {% if show_distance and object.distance %}
+            <div class="distance">({% widthratio object.distance 1000 1 %} {% trans "km away" %})</div>
+        {% endif %}
+        {% if object.location.address %}
+            <div class="address">{{ object.location.address }}</div>
+        {% endif %}
+        {% if object.location.coordinates %}
+            <div class="google-maps-link"><a href="{{ object.location.get_google_map_url }}">{% trans "View on Google Maps" %}</a></div>
+        {% endif %}
+{% endif %}
+</div>
+
+{% include "includes/list_meta.html" %}
