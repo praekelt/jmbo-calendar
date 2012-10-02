@@ -1,0 +1,26 @@
+{% extends "jmbo/modelbase_list.html" %}
+{% load jmbo_inclusion_tags %} 
+
+{% block content %}
+    <div class="event-list">
+        <div class="foundry-container foundry-listing foundry-listing-vertical-thumbnail">
+        
+            {% if view_modifier %}
+                <div class="title">
+                    {{ title }}
+                </div>      
+            {% view_modifier view_modifier %}
+            {% endif %}
+
+            <div class="items">
+                {% for object in object_list %}
+                    <div class="item item-event{% if forloop.first %} first{% endif %}{% if forloop.last %} last{% endif %}">
+                        {% render_object object "list_item_thumbnail" %}
+                    </div>
+                {% endfor %}
+            </div>
+            
+            {% pager page_obj %}
+        </div>
+    </div>
+{% endblock %}

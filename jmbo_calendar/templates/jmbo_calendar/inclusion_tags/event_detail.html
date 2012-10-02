@@ -1,0 +1,21 @@
+{% load i18n humanize %}
+
+<div class="object-detail-inclusion {{ object.class_name.lower }}-detail-inclusion">
+    {% if object.image %}
+        <img src="{{ object.image_detail_url }}" />
+    {% endif %}
+    {{ object.content|safe }}
+    <div class="meta">
+        {% trans "When" %}: <div class="datetime">{{ object.next|naturalday:"D d N 'y" }} {% trans "at" %} {{ object.next|time:"G:i" }}</div>
+        {% if object.location %}
+            {% trans "Where" %}: 
+            <div class="venue">{{ object.location.name }}</div>
+            {% if object.location.address %}
+                <div class="address">{{ object.location.address }}</div>
+            {% endif %}
+            {% if object.location.coordinates %}
+                <div class="google-maps-link"><a href="{{ object.location.get_google_map_url }}" target="_blank">{% trans "View on Google Maps" %}</a></div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
