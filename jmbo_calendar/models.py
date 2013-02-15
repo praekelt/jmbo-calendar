@@ -92,6 +92,16 @@ class Event(ModelBase):
             if self.repeat_until is None or date <= self.repeat_until:
                 return datetime.combine(date, self.start.timetz())
         return None
+    
+    @property
+    def last(self):
+        if self.repeat == 'does_not_repeat':
+            return self.start
+        else:
+            return datetime.combine(self.repeat_until, self.start.timetz())
+                
+            
+                
 
     # calculate the next repeat, ignores repeat_until and assumes repetition
     def _next_repeat(self, date):

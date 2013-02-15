@@ -6,7 +6,16 @@
     {% endif %}
     {{ object.content|safe }}
     <div class="meta">
-        {% trans "When" %}: <div class="datetime">{{ object.next|naturalday:"D d N 'y" }} {% trans "at" %} {{ object.next|time:"G:i" }}</div>
+        {% trans "When" %}: 
+        {% if object.next %}
+            {% with dt=object.next %}{% with day=dt|naturalday:"D d N 'y" time=dt|time:"G:i" %}
+            <div class="datetime">{% blocktrans %}{{ day }} at {{ time }}{% endblocktrans %}</div>
+            {% endwith %}{% endwith %}
+        {% elif object.last %}
+            {% with dt=object.last %}{% with day=dt|naturalday:"D d N 'y" time=dt|time:"G:i" %}
+            <div class="datetime">{% blocktrans %}{{ day }} at {{ time }}{% endblocktrans %}</div>
+            {% endwith %}{% endwith %}
+        {% endif %}
         {% if object.location %}
             {% trans "Where" %}: 
             <div class="venue">{{ object.location.name }}</div>
