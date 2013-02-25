@@ -1,6 +1,11 @@
 Changelog
 =========
 
+next
+----
+#. Friendlier URLs.
+#. Do not show canonical image on detail view if images provided in rich text content.
+
 0.2.2 (2013-02-15)
 ------------------
 #. Display last date and time if there is no next repetition of an event.
