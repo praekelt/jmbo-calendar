@@ -1,10 +1,20 @@
+{% extends "jmbo/inclusion_tags/modelbase_detail.html" %}
 {% load i18n humanize %}
 
-<div class="object-detail-inclusion {{ object.class_name.lower }}-detail-inclusion">
+{% block content %}
+
     {% if object.image %}
-        <img src="{{ object.image_detail_url }}" />
+        {% if '<img' not in object.content %}
+            <div class="image">
+                <img src="{{ object.image_detail_url }}" />
+            </div>
+        {% endif %}
     {% endif %}
-    {{ object.content|safe }}
+
+    <div class="content">
+        {{ object.content|safe }}
+    </div>
+
     <div class="meta">
         {% trans "When" %}: 
         {% if object.next %}
@@ -27,4 +37,5 @@
             {% endif %}
         {% endif %}
     </div>
-</div>
+
+{% endblock %}

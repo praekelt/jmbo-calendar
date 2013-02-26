@@ -27,10 +27,20 @@ class EventAdminForm(ModelBaseAdminForm):
 
 class EventAdmin(ModelBaseAdmin):
     form = EventAdminForm
-
-    list_display = ('title', 'start', 'end', 'next',
-        'repeat', 'repeat_until', 'location')
+    list_display =  ModelBaseAdmin.list_display + ('start', 'end', 'next', 'repeat', 'repeat_until', 'location')
     list_filter = ('repeat',)
+    
+    def get_fieldsets(self, *args, **kwargs):
+        """Re-order fields"""
+        result = super(EventAdmin, self).get_fieldsets(*args, **kwargs)
+        result = list(result)
+        fields = list(result[0][1]['fields'])
+        for name in ('content', 'start', 'end', 'repeat', 'repeat_until', \
+            'external_link', 'calendars'):
+            fields.remove(name)
+            fields.append(name)
+        result[0][1]['fields'] = tuple(fields)
+        return tuple(result)
 
 
 admin.site.register(Calendar, ModelBaseAdmin)
