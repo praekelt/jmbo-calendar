@@ -1,8 +1,8 @@
 Changelog
 =========
 
-next
-----
+0.2.3
+-----
 #. Friendlier URLs.
 #. Do not show canonical image on detail view if images provided in rich text content.
 #. Order admin fields.
