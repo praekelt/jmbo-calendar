@@ -1,6 +1,10 @@
 Changelog
 =========
 
+next
+----
+#. Add missing South migration dependency.
+
 0.2.3
 -----
 #. Friendlier URLs.

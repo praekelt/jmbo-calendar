@@ -9,6 +9,7 @@ class Migration(SchemaMigration):
 
     depends_on = (
         ("atlas", "0001_initial"),
+        ("jmbo", "0004_auto__add_field_modelbase_location"),
         ("foundry", "0038_auto__chg_field_country_title__chg_field_country_slug"),
     )
     
