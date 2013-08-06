@@ -1,6 +1,10 @@
 Changelog
 =========
 
+next
+----
+#. Use correct attribute to render thumbnail image.
+
 0.2.4
 -----
 #. Add missing South migration dependency.
