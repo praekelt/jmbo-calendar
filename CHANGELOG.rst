@@ -4,6 +4,7 @@ Changelog
 next
 ----
 #. Use correct attribute to render thumbnail image.
+#. Cache templates.
 
 0.2.4
 -----

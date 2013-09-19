@@ -1,36 +1,39 @@
 {% load jmbo_template_tags foundry_tags i18n humanize %}
 
-<a href="{{ object.get_absolute_url }}">
-    <img src="{{ object.get_modelbase_list_item_thumbnail_url }}" alt="{{ object.title }}" />
-</a>
+{% jmbocache 3600 'event-list-item-thumbnail' object.id object.modified %}
+    <a href="{{ object.get_absolute_url }}">
+        <img src="{{ object.get_modelbase_list_item_thumbnail_url }}" alt="{{ object.title }}" />
+    </a>
 
-<div class="title">
-    {% if object.categories.all.count %}<span class="category">{{ object.categories.all|join_titles }}:</span>{% endif %}
-    <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
-</div>
-<div class="meta">
-{% if object.next %}
-    {% with dt=object.next %}{% with day=dt|naturalday:"D d N 'y" time=dt|time:"G:i" %}
-    <div class="datetime">{% blocktrans %}{{ day }} at {{ time }}{% endblocktrans %}</div>
-    {% endwith %}{% endwith %}
-{% elif object.last %}
-    {% with dt=object.last %}{% with day=dt|naturalday:"D d N 'y" time=dt|time:"G:i" %}
-    <div class="datetime">{% blocktrans %}{{ day }} at {{ time }}{% endblocktrans %}</div>
-    {% endwith %}{% endwith %}
-{% endif %}
+    <div class="title">
+        {% if object.categories.all.count %}<span class="category">{{ object.categories.all|join_titles }}:</span>{% endif %}
+        <a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+    </div>
+    <div class="meta">
+    {% if object.next %}
+        {% with dt=object.next %}{% with day=dt|naturalday:"D d N 'y" time=dt|time:"G:i" %}
+        <div class="datetime">{% blocktrans %}{{ day }} at {{ time }}{% endblocktrans %}</div>
+        {% endwith %}{% endwith %}
+    {% elif object.last %}
+        {% with dt=object.last %}{% with day=dt|naturalday:"D d N 'y" time=dt|time:"G:i" %}
+        <div class="datetime">{% blocktrans %}{{ day }} at {{ time }}{% endblocktrans %}</div>
+        {% endwith %}{% endwith %}
+    {% endif %}
 
-{% if object.location %}
-    <div class="venue">{% trans "Venue" %}: {{ object.location.name }}</div>
-    {% if show_distance and object.distance %}
-        <div class="distance">({% widthratio object.distance 1000 1 %} {% trans "km away" %})</div>
+    {% if object.location %}
+        <div class="venue">{% trans "Venue" %}: {{ object.location.name }}</div>
+        {% if show_distance and object.distance %}
+            <div class="distance">({% widthratio object.distance 1000 1 %} {% trans "km away" %})</div>
+        {% endif %}
+        {% if object.location.address %}
+            <div class="address">{{ object.location.address }}</div>
+        {% endif %}
+        {% if object.location.coordinates %}
+            <div class="google-maps-link"><a href="{{ object.location.get_google_map_url }}">{% trans "View on Google Maps" %}</a></div>
+        {% endif %}
     {% endif %}
-    {% if object.location.address %}
-        <div class="address">{{ object.location.address }}</div>
-    {% endif %}
-    {% if object.location.coordinates %}
-        <div class="google-maps-link"><a href="{{ object.location.get_google_map_url }}">{% trans "View on Google Maps" %}</a></div>
-    {% endif %}
-{% endif %}
-</div>
+    </div>
+
+{% endjmbocache %}
 
 {% include "includes/list_meta.html" %}
