@@ -1,41 +1,43 @@
 {% extends "jmbo/inclusion_tags/modelbase_detail.html" %}
-{% load i18n humanize %}
+{% load i18n humanize jmbo_template_tags %}
 
 {% block content %}
+    {% jmbocache 3600 'object-detail-inclusion' object.id object.modified %}
 
-    {% if object.image %}
-        {% if '<img' not in object.content %}
-            <div class="image">
-                <img src="{{ object.image_detail_url }}" />
-            </div>
-        {% endif %}
-    {% endif %}
-
-    <div class="content">
-        {{ object.content|safe }}
-    </div>
-
-    <div class="meta">
-        {% trans "When" %}: 
-        {% if object.next %}
-            {% with dt=object.next %}{% with day=dt|naturalday:"D d N 'y" time=dt|time:"G:i" %}
-            <div class="datetime">{% blocktrans %}{{ day }} at {{ time }}{% endblocktrans %}</div>
-            {% endwith %}{% endwith %}
-        {% elif object.last %}
-            {% with dt=object.last %}{% with day=dt|naturalday:"D d N 'y" time=dt|time:"G:i" %}
-            <div class="datetime">{% blocktrans %}{{ day }} at {{ time }}{% endblocktrans %}</div>
-            {% endwith %}{% endwith %}
-        {% endif %}
-        {% if object.location %}
-            {% trans "Where" %}: 
-            <div class="venue">{{ object.location.name }}</div>
-            {% if object.location.address %}
-                <div class="address">{{ object.location.address }}</div>
-            {% endif %}
-            {% if object.location.coordinates %}
-                <div class="google-maps-link"><a href="{{ object.location.get_google_map_url }}" target="_blank">{% trans "View on Google Maps" %}</a></div>
+        {% if object.image %}
+            {% if '<img' not in object.content %}
+                <div class="image">
+                    <img src="{{ object.image_detail_url }}" />
+                </div>
             {% endif %}
         {% endif %}
-    </div>
 
+        <div class="content">
+            {{ object.content|safe }}
+        </div>
+
+        <div class="meta">
+            {% trans "When" %}:
+            {% if object.next %}
+                {% with dt=object.next %}{% with day=dt|naturalday:"D d N 'y" time=dt|time:"G:i" %}
+                <div class="datetime">{% blocktrans %}{{ day }} at {{ time }}{% endblocktrans %}</div>
+                {% endwith %}{% endwith %}
+            {% elif object.last %}
+                {% with dt=object.last %}{% with day=dt|naturalday:"D d N 'y" time=dt|time:"G:i" %}
+                <div class="datetime">{% blocktrans %}{{ day }} at {{ time }}{% endblocktrans %}</div>
+                {% endwith %}{% endwith %}
+            {% endif %}
+            {% if object.location %}
+                {% trans "Where" %}:
+                <div class="venue">{{ object.location.name }}</div>
+                {% if object.location.address %}
+                    <div class="address">{{ object.location.address }}</div>
+                {% endif %}
+                {% if object.location.coordinates %}
+                    <div class="google-maps-link"><a href="{{ object.location.get_google_map_url }}" target="_blank">{% trans "View on Google Maps" %}</a></div>
+                {% endif %}
+            {% endif %}
+        </div>
+
+    {% endjmbocache %}
 {% endblock %}

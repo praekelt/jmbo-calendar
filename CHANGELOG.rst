@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.5
+-----
+#. Use correct attribute to render thumbnail image.
+#. Cache templates.
+
 0.2.4
 -----
 #. Add missing South migration dependency.
