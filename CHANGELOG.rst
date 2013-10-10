@@ -1,8 +1,8 @@
 Changelog
 =========
 
-next
-----
+0.2.5
+-----
 #. Use correct attribute to render thumbnail image.
 #. Cache templates.
 
