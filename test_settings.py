@@ -3,13 +3,11 @@ from foundry.settings import *
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'calendar',
-        'USER': 'test',
+        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
+        'NAME': 'test_calendar.db',
+        'USER': '',
         'PASSWORD': '',
         'HOST': '',
         'PORT': '',
     }
 }
-
-# Need this last line until django-setuptest is improved.

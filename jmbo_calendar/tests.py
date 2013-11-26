@@ -1,7 +1,6 @@
-import unittest
 from datetime import datetime, timedelta
 
-from django.test import TestCase
+from django.test import TestCase as BaseTestCase
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.db import models
@@ -10,7 +9,7 @@ from django.utils import timezone
 from jmbo_calendar.models import Calendar, Event
 
 
-class JmboCalendarTestCase(TestCase):
+class JmboCalendarTestCase(BaseTestCase):
 
     def setUp(self):
         self.dt = timezone.now()

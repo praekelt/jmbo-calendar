@@ -1,6 +1,10 @@
 Changelog
 =========
 
+next
+----
+#. Change tests to use spatialite.
+
 0.2.5
 -----
 #. Use correct attribute to render thumbnail image.
