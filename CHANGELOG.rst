@@ -3,7 +3,8 @@ Changelog
 
 next
 ----
-#. Change tests to use spatialite.
+#. Remove dependency on `jmbo-foundry`.
+#. More tests.
 
 0.2.5
 -----

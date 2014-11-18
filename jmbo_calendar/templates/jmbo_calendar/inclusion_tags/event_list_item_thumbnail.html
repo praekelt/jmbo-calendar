@@ -1,4 +1,4 @@
-{% load jmbo_template_tags foundry_tags i18n humanize %}
+{% load jmbo_template_tags i18n humanize jmbo_calendar_tags %}
 
 {% jmbocache 3600 'event-list-item-thumbnail' object.id object.modified %}
     <a href="{{ object.get_absolute_url }}">
