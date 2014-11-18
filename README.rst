@@ -11,6 +11,7 @@ Jmbo Calendar
 
 Installation
 ------------
+todo: mention humanize, why cal exists.
 
 Content types
 -------------
