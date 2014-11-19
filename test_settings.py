@@ -8,7 +8,7 @@ DEBUG = True
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'jmbo',
         'USER': 'postgres',
         'PASSWORD': '',
@@ -26,6 +26,7 @@ INSTALLED_APPS = (
     'secretballot',
     'publisher',
     'preferences',
+    'atlas',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.comments',
