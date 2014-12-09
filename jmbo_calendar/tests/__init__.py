@@ -1,16 +1,42 @@
-import unittest
-from datetime import datetime, timedelta
+from datetime import datetime
 
-from django.test import TestCase
-from django.conf import settings
-from django.contrib.sites.models import Site
-from django.db import models
+from django.test import TestCase as BaseTestCase
+from django.test.client import Client as BaseClient, RequestFactory
+from django.contrib.auth.models import User
+from django.template import RequestContext, loader
 from django.utils import timezone
+from django.utils.timezone import timedelta
+from django.contrib.sites.models import Site
 
 from jmbo_calendar.models import Calendar, Event
 
 
-class JmboCalendarTestCase(TestCase):
+class TestCase(BaseTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.request = RequestFactory()
+        cls.client = BaseClient()
+
+        # Editor
+        cls.editor, dc = User.objects.get_or_create(
+            username='editor',
+            email='editor@test.com'
+        )
+        cls.editor.set_password("password")
+        cls.editor.save()
+
+        # Event
+        obj, dc = Event.objects.get_or_create(
+            title='Event',
+            start=timezone.now(),
+            end=timezone.now() + timezone.timedelta(days=1),
+            content="Event content",
+            owner=cls.editor, state='published',
+        )
+        obj.sites = [1]
+        obj.save()
+        cls.event = obj
 
     def setUp(self):
         self.dt = timezone.now()
@@ -67,8 +93,10 @@ class JmboCalendarTestCase(TestCase):
         titles = Event.coordinator.upcoming().values_list('title', flat=True)
         # check that only e1 and e3 are in upcoming query set
         self.assertTrue('e1' in titles)
+        self.assertTrue('e2' not in titles)
         self.assertTrue('e3' in titles)
-        self.assertTrue(len(titles) == 2)
+        self.assertTrue('e4' not in titles)
+        self.assertTrue('e5' not in titles)
 
     def test_no_repeat(self):
         e = Event.objects.create(
@@ -141,3 +169,19 @@ class JmboCalendarTestCase(TestCase):
 
     def test_monthly_repeat(self):
         pass
+
+    def test_event_detail(self):
+        response = self.client.get(self.event.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.failUnless("Event content" in response.content)
+
+    def test_event_list_item_thumbnail(self):
+        t = loader.get_template(
+            "jmbo_calendar/inclusion_tags/event_list_item_thumbnail.html"
+        )
+        context = RequestContext(self.request)
+        context["object"] = self.event
+        html = t.render(context)
+        self.failUnless(
+            """<a href="/calendar/event/event/">Event</a>""" in html
+        )

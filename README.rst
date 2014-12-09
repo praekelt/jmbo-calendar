@@ -1,7 +1,18 @@
-jmbo-calendar
+Jmbo Calendar
 =============
+**Jmbo calendar application. Provides calendars and events.**
 
-Running tests
+.. figure:: https://travis-ci.org/praekelt/jmbo-calendar.svg?branch=develop
+   :align: center
+   :alt: Travis
+
+.. contents:: Contents
+    :depth: 5
+
+Installation
+------------
+todo: mention humanize, atlas, postgis, why cal exists.
+
+Content types
 -------------
-Tests use Spatialite and require pysqlite >= 2.5. Pysqlite needs to be built with enable_load_extension - this is not the default for most packages. Be sure to enable it before running tests.
 

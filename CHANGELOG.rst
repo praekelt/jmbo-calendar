@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3
+---
+#. Remove dependency on `jmbo-foundry`.
+#. More tests.
+
 0.2.5
 -----
 #. Use correct attribute to render thumbnail image.
