@@ -2,37 +2,30 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.contrib.gis.geos import Point
 
-from jmbo.generic.views import GenericObjectList
-from jmbo.view_modifiers import DefaultViewModifier
+from jmbo.views import ObjectList
 
 from jmbo_calendar.models import Event
 
-from atlas.views import location_required
 
+class ObjectList(ObjectList):
 
-class ObjectList(GenericObjectList):
+    def get_context_data(self, **kwargs):
+        context = super(ObjectList, self).get_context_data(**kwargs)
+        show_distance = isinstance(self.request.session['location']['position'], Point)
+        context["title"] = _("Events")
+        context["show_distance"] = show_distance
+        return context
 
-    def get_extra_context(self, *args, **kwargs):
-        request = args[0]
-        show_distance = isinstance(request.session['location']['position'], Point)
-        return {'title': _('Events'), 'show_distance': show_distance}
-        
-    def get_queryset(self, *args, **kwargs):
+    def get_queryset(self):
         request = args[0]
         qs = Event.coordinator.upcoming()
-        qs = qs.filter(location__country=request.session['location']['city'].country_id)
-        position = request.session['location']['position']
+        qs = qs.filter(location__country=self.request.session['location']['city'].country_id)
+        position = self.request.session['location']['position']
         if not isinstance(position, Point):
-            position = request.session['location']['city'].coordinates
+            position = self.request.session['location']['city'].coordinates
         qs = qs.distance(position).order_by('distance', 'start')
         return qs
 
     def get_paginate_by(self, *args, **kwargs):
+        # todo: needs work in Jmbo to work
         return 10
-
-        
-_obj_list = ObjectList()
-
-@location_required(override_old=False)
-def object_list(*args, **kwargs):
-    return _obj_list.__call__(*args, **kwargs)

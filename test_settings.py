@@ -9,7 +9,7 @@ DEBUG = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'jmbo',
+        'NAME': 'jmbo_spatial',
         'USER': 'postgres',
         'PASSWORD': '',
         'HOST': '',
