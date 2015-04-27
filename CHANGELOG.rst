@@ -1,8 +1,8 @@
 Changelog
 =========
 
-next
-----
+2.0.0a1
+-------
 #. Up minimum jmbo to 2.0.0.
 #. Django 1.6 support.
 
