@@ -1,20 +1,22 @@
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls import patterns, url
 
-from jmbo_calendar.views import object_list
+from atlas.views import location_required
+
+from jmbo.views import ObjectDetail
+from jmbo_calendar.views import ObjectList
 
 
 urlpatterns = patterns('',
-    
+
     url(
         r'^events/$',
-        object_list,
+        location_required(ObjectList.as_view()),
         name='events'
     ),
-    
+
     url(
-        r'^event/(?P<slug>[\w-]+)/$', 
-        'jmbo.views.object_detail',
-        {},
+        r'^event/(?P<slug>[\w-]+)/$',
+        ObjectDetail.as_view(),
         name='event_object_detail'
     ),
 
