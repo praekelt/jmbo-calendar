@@ -11,7 +11,7 @@ Jmbo Calendar
 
 Installation
 ------------
-todo: mention humanize, atlas, postgis, why cal exists.
+todo: mention humanize, atlas, postgis, why cal exists. ckeditor.
 
 Content types
 -------------

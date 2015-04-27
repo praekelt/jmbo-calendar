@@ -15,6 +15,8 @@ from jmbo_calendar.models import Event
 Generates events with randomly assigned locations - first generate locations.
 '''
 def generate():
+    if not Location.objects.exists():
+        return []
     objects = []
     now = timezone.now()
     repeat_choices = Event._meta.get_field_by_name('repeat')[0].choices

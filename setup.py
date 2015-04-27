@@ -12,11 +12,12 @@ setup(
     packages = find_packages(),
     install_requires = [
         'django-ckeditor>=4.0.2',
-        'jmbo>=1.1.1',
-        'django-atlas',
+        'jmbo==2.0.0a2',
+        'django-atlas>=0.1',
     ],
     tests_require=[
         'django-setuptest>=0.1.4',
+        'psycopg2',
     ],
     test_suite="setuptest.setuptest.SetupTestSuite",
     include_package_data=True,
