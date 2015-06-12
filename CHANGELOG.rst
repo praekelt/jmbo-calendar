@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.0
+-----
+#. Stabilize on Jmbo 2.0.0.
+
 2.0.0a1
 -------
 #. Up minimum jmbo to 2.0.0.
