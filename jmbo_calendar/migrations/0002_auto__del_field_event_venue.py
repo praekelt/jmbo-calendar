@@ -3,8 +3,6 @@ import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
-from django.db import connection
-from django.db.utils import DatabaseError
 
 from jmbo import USE_GIS
 
@@ -12,14 +10,8 @@ from jmbo import USE_GIS
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Deleting field 'Event.venue'
-        try:
-            # Check that the venue field exists
-            #connection.cursor().execute("SELECT venue_id FROM jmbo_calendar_event;")
+        if USE_GIS:
             db.delete_column('jmbo_calendar_event', 'venue_id')
-        except:
-            pass
-
 
     def backwards(self, orm):
 
