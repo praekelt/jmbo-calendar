@@ -15,7 +15,7 @@ class Migration(SchemaMigration):
             # Check that the venue field exists
             connection.cursor().execute("SELECT venue_id FROM jmbo_calendar_event;")
             db.delete_column('jmbo_calendar_event', 'venue_id')
-        except Database Error:
+        except DatabaseError:
             pass
 
 
