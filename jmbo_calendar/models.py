@@ -10,8 +10,6 @@ from jmbo.managers import DefaultManager
 
 from ckeditor.fields import RichTextField
 
-from atlas.models import Location
-
 from jmbo_calendar.managers import CoordinatorManager
 
 
@@ -32,7 +30,7 @@ class Event(ModelBase):
 
     objects = DefaultManager()
     coordinator = CoordinatorManager()
-    
+
     external_link = models.CharField(
         max_length=255,
         blank=True,
