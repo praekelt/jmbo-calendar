@@ -11,7 +11,12 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Deleting field 'Event.venue'
-        db.delete_column('jmbo_calendar_event', 'venue_id')
+        try:
+            # Check that the venue field exists
+            connection.cursor().execute("SELECT venue_id FROM jmbo_calendar_event;")
+            db.delete_column('jmbo_calendar_event', 'venue_id')
+        except Database Error:
+            pass
 
 
     def backwards(self, orm):
