@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.1
+-----
+#. Ensure atlas can be optional.
+
 2.0.0
 -----
 #. Stabilize on Jmbo 2.0.0.

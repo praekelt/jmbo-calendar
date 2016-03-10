@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django import forms
 
+from jmbo import USE_GIS
 from jmbo.admin import ModelBaseAdmin, ModelBaseAdminForm
 
 from jmbo_calendar.models import Calendar, Event
@@ -27,9 +28,11 @@ class EventAdminForm(ModelBaseAdminForm):
 
 class EventAdmin(ModelBaseAdmin):
     form = EventAdminForm
-    list_display =  ModelBaseAdmin.list_display + ('start', 'end', 'next', 'repeat', 'repeat_until', 'location')
+    list_display =  ModelBaseAdmin.list_display + ('start', 'end', 'next', 'repeat', 'repeat_until')
+    if USE_GIS:
+        list_display += ('location',)
     list_filter = ('repeat',)
-    
+
     def get_fieldsets(self, *args, **kwargs):
         """Re-order fields"""
         result = super(EventAdmin, self).get_fieldsets(*args, **kwargs)

@@ -1,16 +1,20 @@
 from django.conf.urls import patterns, url
 
-from atlas.views import location_required
 
+from jmbo import USE_GIS
 from jmbo.views import ObjectDetail
 from jmbo_calendar.views import ObjectList
+
+
+if USE_GIS:
+    from atlas.views import location_required
 
 
 urlpatterns = patterns('',
 
     url(
         r'^events/$',
-        location_required(ObjectList.as_view()),
+        USE_GIS and location_required(ObjectList.as_view()) or ObjectList.as_view(),
         name='events'
     ),
 

@@ -4,15 +4,16 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+from jmbo import USE_GIS
+
 
 class Migration(SchemaMigration):
 
     depends_on = (
-        ("atlas", "0001_initial"),
         ("jmbo", "0004_auto__add_field_modelbase_location"),
         ("foundry", "0038_auto__chg_field_country_title__chg_field_country_slug"),
     )
-    
+
     def forwards(self, orm):
         # Adding model 'Calendar'
         db.create_table('jmbo_calendar_calendar', (
@@ -27,7 +28,6 @@ class Migration(SchemaMigration):
             ('end', self.gf('django.db.models.fields.DateTimeField')()),
             ('repeat', self.gf('django.db.models.fields.CharField')(default='does_not_repeat', max_length=64)),
             ('repeat_until', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('venue', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['atlas.Location'])),
             ('content', self.gf('ckeditor.fields.RichTextField')()),
         ))
         db.send_create_signal('jmbo_calendar', ['Event'])
@@ -40,6 +40,10 @@ class Migration(SchemaMigration):
         ))
         db.create_unique('jmbo_calendar_event_calendars', ['event_id', 'calendar_id'])
 
+        if USE_GIS:
+            db.add_column('jmbo_calendar_event', 'venue',
+                        self.gf('django.db.models.fields.related.ForeignKey')(to=orm['atlas.Location']),
+                        keep_default=False)
 
     def backwards(self, orm):
         # Deleting model 'Calendar'
@@ -53,40 +57,6 @@ class Migration(SchemaMigration):
 
 
     models = {
-        'atlas.city': {
-            'Meta': {'ordering': "('name',)", 'object_name': 'City'},
-            'coordinates': ('atlas.fields.CoordinateField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
-            'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['atlas.Country']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128', 'db_index': 'True'}),
-            'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['atlas.Region']", 'null': 'True', 'blank': 'True'})
-        },
-        'atlas.country': {
-            'Meta': {'ordering': "('name',)", 'object_name': 'Country'},
-            'border': ('django.contrib.gis.db.models.fields.MultiPolygonField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
-            'country_code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '2', 'db_index': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        'atlas.location': {
-            'Meta': {'object_name': 'Location'},
-            'address': ('django.db.models.fields.TextField', [], {'max_length': '512', 'null': 'True', 'blank': 'True'}),
-            'city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['atlas.City']"}),
-            'coordinates': ('atlas.fields.CoordinateField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
-            'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['atlas.Country']"}),
-            'description': ('django.db.models.fields.TextField', [], {'max_length': '1024', 'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128', 'db_index': 'True'}),
-            'photo': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['photologue.Photo']", 'null': 'True', 'blank': 'True'})
-        },
-        'atlas.region': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('country', 'code'),)", 'object_name': 'Region'},
-            'border': ('django.contrib.gis.db.models.fields.MultiPolygonField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
-            'code': ('django.db.models.fields.CharField', [], {'max_length': '2', 'db_index': 'True'}),
-            'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['atlas.Country']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'})
-        },
         'auth.group': {
             'Meta': {'object_name': 'Group'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -129,7 +99,6 @@ class Migration(SchemaMigration):
             'repeat': ('django.db.models.fields.CharField', [], {'default': "'does_not_repeat'", 'max_length': '64'}),
             'repeat_until': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'start': ('django.db.models.fields.DateTimeField', [], {}),
-            'venue': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['atlas.Location']"})
         },
         'category.category': {
             'Meta': {'ordering': "('title',)", 'object_name': 'Category'},
@@ -236,5 +205,44 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }
     }
+
+    if USE_GIS:
+        models.update({
+        'atlas.city': {
+            'Meta': {'ordering': "('name',)", 'object_name': 'City'},
+            'coordinates': ('atlas.fields.CoordinateField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
+            'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['atlas.Country']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '128', 'db_index': 'True'}),
+            'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['atlas.Region']", 'null': 'True', 'blank': 'True'})
+        },
+        'atlas.country': {
+            'Meta': {'ordering': "('name',)", 'object_name': 'Country'},
+            'border': ('django.contrib.gis.db.models.fields.MultiPolygonField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
+            'country_code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '2', 'db_index': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
+        },
+        'atlas.location': {
+            'Meta': {'object_name': 'Location'},
+            'address': ('django.db.models.fields.TextField', [], {'max_length': '512', 'null': 'True', 'blank': 'True'}),
+            'city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['atlas.City']"}),
+            'coordinates': ('atlas.fields.CoordinateField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
+            'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['atlas.Country']"}),
+            'description': ('django.db.models.fields.TextField', [], {'max_length': '1024', 'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '128', 'db_index': 'True'}),
+            'photo': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['photologue.Photo']", 'null': 'True', 'blank': 'True'})
+        },
+        'atlas.region': {
+            'Meta': {'ordering': "('name',)", 'unique_together': "(('country', 'code'),)", 'object_name': 'Region'},
+            'border': ('django.contrib.gis.db.models.fields.MultiPolygonField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
+            'code': ('django.db.models.fields.CharField', [], {'max_length': '2', 'db_index': 'True'}),
+            'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['atlas.Country']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'})
+        }
+        })
+        models['jmbo_calendar.event']['venue'] = ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['atlas.Location']"})
 
     complete_apps = ['jmbo_calendar']
