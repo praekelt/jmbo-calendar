@@ -1,5 +1,6 @@
 from django.utils.translation import ugettext as _
 
+from jmbo import USE_GIS
 from jmbo.views import ObjectList
 
 from jmbo_calendar.models import Event
@@ -9,13 +10,12 @@ class ObjectList(ObjectList):
 
     def get_context_data(self, **kwargs):
         context = super(ObjectList, self).get_context_data(**kwargs)
-        try:
+        show_distance = False
+        if USE_GIS:
             from django.contrib.gis.geos import Point
             show_distance = isinstance(
                 self.request.session['location']['position'], Point
             )
-        except ImportError:
-            show_distance = False
         context["title"] = _("Events")
         context["show_distance"] = show_distance
         return context
