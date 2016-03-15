@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.2
+-----
+#. Remove remnants of GIS code in views.
+
 2.0.1
 -----
 #. Ensure atlas can be optional.

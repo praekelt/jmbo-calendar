@@ -1,7 +1,6 @@
 from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse
-from django.contrib.gis.geos import Point
 
+from jmbo import USE_GIS
 from jmbo.views import ObjectList
 
 from jmbo_calendar.models import Event
@@ -11,15 +10,21 @@ class ObjectList(ObjectList):
 
     def get_context_data(self, **kwargs):
         context = super(ObjectList, self).get_context_data(**kwargs)
-        show_distance = isinstance(self.request.session['location']['position'], Point)
+        show_distance = False
+        if USE_GIS:
+            from django.contrib.gis.geos import Point
+            show_distance = isinstance(
+                self.request.session['location']['position'], Point
+            )
         context["title"] = _("Events")
         context["show_distance"] = show_distance
         return context
 
     def get_queryset(self):
-        request = args[0]
         qs = Event.coordinator.upcoming()
-        qs = qs.filter(location__country=self.request.session['location']['city'].country_id)
+        qs = qs.filter(
+            location__country=self.request.session['location']['city'].country_id
+        )
         position = self.request.session['location']['position']
         if not isinstance(position, Point):
             position = self.request.session['location']['city'].coordinates
