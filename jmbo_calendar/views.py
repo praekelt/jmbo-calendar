@@ -1,5 +1,4 @@
 from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse
 from django.contrib.gis.geos import Point
 
 from jmbo.views import ObjectList
@@ -17,9 +16,10 @@ class ObjectList(ObjectList):
         return context
 
     def get_queryset(self):
-        request = args[0]
         qs = Event.coordinator.upcoming()
-        qs = qs.filter(location__country=self.request.session['location']['city'].country_id)
+        qs = qs.filter(
+            location__country=self.request.session['location']['city'].country_id
+        )
         position = self.request.session['location']['position']
         if not isinstance(position, Point):
             position = self.request.session['location']['city'].coordinates
