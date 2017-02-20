@@ -1,8 +1,8 @@
 {% extends "jmbo/inclusion_tags/modelbase_detail.html" %}
-{% load i18n humanize jmbo_template_tags %}
+{% load i18n humanize jmbo_template_tags ultracache_tags %}
 
 {% block content %}
-    {% jmbocache 3600 'object-detail-inclusion' object.id object.modified %}
+    {% ultracache 3600 'object-detail-inclusion' object.id object.modified %}
 
         {% if object.image %}
             {% if '<img' not in object.content %}
@@ -39,5 +39,5 @@
             {% endif %}
         </div>
 
-    {% endjmbocache %}
+    {% endultracache %}
 {% endblock %}

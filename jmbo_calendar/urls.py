@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 
 from jmbo import USE_GIS
@@ -10,8 +10,7 @@ if USE_GIS:
     from atlas.views import location_required
 
 
-urlpatterns = patterns('',
-
+urlpatterns = [
     url(
         r'^events/$',
         USE_GIS and location_required(ObjectList.as_view()) or ObjectList.as_view(),
@@ -21,7 +20,6 @@ urlpatterns = patterns('',
     url(
         r'^event/(?P<slug>[\w-]+)/$',
         ObjectDetail.as_view(),
-        name='event_object_detail'
+        name='event_detail'
     ),
-
-)
+]

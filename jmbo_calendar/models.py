@@ -8,7 +8,7 @@ from django.utils import timezone
 from jmbo.models import ModelBase
 from jmbo.managers import DefaultManager
 
-from ckeditor.fields import RichTextField
+from simplemde.fields import SimpleMDEField
 
 from jmbo_calendar.managers import CoordinatorManager
 
@@ -62,7 +62,7 @@ class Event(ModelBase):
         null=True,
         related_name='event_calendars',
     )
-    content = RichTextField(help_text='The event description.')
+    content = SimpleMDEField(help_text='The event description.')
 
     class Meta:
         ordering = ('start', )

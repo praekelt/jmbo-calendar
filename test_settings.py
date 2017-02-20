@@ -15,6 +15,7 @@ DATABASES = {
 
 INSTALLED_APPS = (
     'jmbo_calendar',
+    'jmbo_calendar.tests',
     'jmbo',
     'photologue',
     'category',
@@ -24,11 +25,9 @@ INSTALLED_APPS = (
     'preferences',
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.comments',
     'django.contrib.contenttypes',
     'django.contrib.humanize',
     'django.contrib.sites',
-    'south',
 )
 
 ROOT_URLCONF = 'jmbo_calendar.tests.urls'

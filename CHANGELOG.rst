@@ -1,6 +1,10 @@
 Changelog
 =========
 
+next
+----
+#. Jmbo 3 and Django 1.9 compatibility.
+
 2.0.2
 -----
 #. Remove remnants of GIS code in views.

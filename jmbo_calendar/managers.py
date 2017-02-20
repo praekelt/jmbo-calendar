@@ -9,7 +9,7 @@ from jmbo import managers
 class CoordinatorManager(managers.PermittedManager):
 
     def upcoming(self):
-        qs = super(CoordinatorManager, self).get_query_set()
+        qs = super(CoordinatorManager, self).get_queryset()
         now = timezone.now()
         return qs.exclude(Q(end__lte=now) &
                 (Q(repeat='does_not_repeat') | (~Q(repeat_until=None) &

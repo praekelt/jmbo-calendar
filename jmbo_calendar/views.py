@@ -26,6 +26,8 @@ class ObjectList(ObjectList):
             location__country=self.request.session['location']['city'].country_id
         )
         position = self.request.session['location']['position']
+        # if USE_GIS:
+        #     from django.contrib.gis.geos import Point
         if not isinstance(position, Point):
             position = self.request.session['location']['city'].coordinates
         qs = qs.distance(position).order_by('distance', 'start')

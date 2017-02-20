@@ -1,6 +1,6 @@
-{% load jmbo_template_tags i18n humanize jmbo_calendar_tags %}
+{% load i18n humanize jmbo_calendar_tags jmbo_template_tags ultracache_tags %}
 
-{% jmbocache 3600 'event-list-item-thumbnail' object.id object.modified %}
+{% ultracache 3600 'event-list-item-thumbnail' object.id object.modified %}
     <a href="{{ object.get_absolute_url }}">
         <img src="{{ object.get_modelbase_list_item_thumbnail_url }}" alt="{{ object.title }}" />
     </a>
@@ -34,6 +34,6 @@
     {% endif %}
     </div>
 
-{% endjmbocache %}
+{% endultracache %}
 
 {% include "includes/list_meta.html" %}
