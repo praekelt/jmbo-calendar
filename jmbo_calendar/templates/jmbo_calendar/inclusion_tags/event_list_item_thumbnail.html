@@ -1,4 +1,4 @@
-{% load i18n humanize jmbo_calendar_tags jmbo_template_tags ultracache_tags %}
+{% load i18n humanize jmbo_calendar_tags ultracache_tags %}
 
 {% ultracache 3600 'event-list-item-thumbnail' object.id object.modified %}
     <a href="{{ object.get_absolute_url }}">
