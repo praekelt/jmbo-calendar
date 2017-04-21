@@ -1,9 +1,12 @@
 from datetime import datetime, timedelta
 import calendar
 import math
+import markdown
 
 from django.db import models
 from django.utils import timezone
+from django.utils.functional import cached_property
+from django.utils.text import mark_safe
 
 from jmbo.models import ModelBase
 from jmbo.managers import DefaultManager
@@ -14,7 +17,6 @@ from jmbo_calendar.managers import CoordinatorManager
 
 
 class Calendar(ModelBase):
-
     class Meta:
         verbose_name = "Calendar"
         verbose_name_plural = "Calendars"
@@ -65,11 +67,17 @@ class Event(ModelBase):
     content = SimpleMDEField(help_text='The event description.')
 
     class Meta:
-        ordering = ('start', )
+        ordering = ('start',)
 
     @property
     def duration(self):
         return self.end - self.start
+
+    @cached_property
+    def markdown(self):
+        if not self.content:
+            return ""
+        return mark_safe(markdown.markdown(self.content))
 
     @property
     def next(self):
@@ -82,7 +90,7 @@ class Event(ModelBase):
                 (self.repeat_until is None or now.date() <= self.repeat_until):
             if now.timetz() < self.end.timetz() or self.duration > \
                     (self.start.replace(hour=23, minute=59, second=59,
-                    microsecond=999999) - self.start):
+                                        microsecond=999999) - self.start):
                 date = self._next_repeat(now.date())
             else:
                 date = self._next_repeat(now.date() + timedelta(days=1))
@@ -90,16 +98,13 @@ class Event(ModelBase):
             if self.repeat_until is None or date <= self.repeat_until:
                 return datetime.combine(date, self.start.timetz())
         return None
-    
+
     @property
     def last(self):
         if self.repeat == 'does_not_repeat':
             return self.start
         else:
             return datetime.combine(self.repeat_until, self.start.timetz())
-                
-            
-                
 
     # calculate the next repeat, ignores repeat_until and assumes repetition
     def _next_repeat(self, date):
@@ -108,11 +113,11 @@ class Event(ModelBase):
         elif self.repeat == 'monthly_by_day_of_month':
             if date.day > self.start.day:  # skip to next month
                 date = date.replace(day=1, month=(date.month + 1) % 12,
-                        year=date.year + int(math.floor((date.month + 1) / 12)))
+                                    year=date.year + int(math.floor((date.month + 1) / 12)))
 
             if self.start.day > calendar.monthrange(date.year, date.month)[1]:
                 date = date.replace(day=calendar.monthrange(date.year,
-                        date.month)[1])
+                                                            date.month)[1])
             else:
                 date = date.replace(day=self.start.day)
         else:
@@ -141,14 +146,14 @@ class Event(ModelBase):
                         self.repeat_until = next - timedelta(days=7)
                     elif self.repeat == 'weekdays':
                         self.repeat_until = self.repeat_until - \
-                            timedelta(days=self.repeat_until.weekday() - 4)
+                                            timedelta(days=self.repeat_until.weekday() - 4)
                     elif self.repeat == 'weekends':
                         self.repeat_until = self.repeat_until - \
-                            timedelta(days=self.repeat_until.weekday() + 1)
+                                            timedelta(days=self.repeat_until.weekday() + 1)
                     else:  # must be 'monthly_by_day_of_month'
                         self.repeat_until = next - timedelta(days=
-                                calendar.monthrange(self.repeat_until.year,
-                                self.repeat_until.month)[1])
+                                                             calendar.monthrange(self.repeat_until.year,
+                                                                                 self.repeat_until.month)[1])
                 elif next < self.repeat_until:
                     raise ValueError('''The repeat_until date is too early
                             and the event will never be repeated.''')
