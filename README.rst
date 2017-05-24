@@ -2,9 +2,11 @@ Jmbo Calendar
 =============
 **Jmbo calendar application. Provides calendars and events.**
 
-.. figure:: https://travis-ci.org/praekelt/jmbo-calendar.svg?branch=develop
-   :align: center
-   :alt: Travis
+.. image:: https://travis-ci.org/praekelt/jmbo-calendar.svg
+    :target: https://travis-ci.org/praekelt/jmbo-calendar
+
+.. image:: https://coveralls.io/repos/github/praekelt/jmbo-calendar/badge.svg?branch=develop
+    :target: https://coveralls.io/github/praekelt/jmbo-calendar?branch=develop
 
 .. contents:: Contents
     :depth: 5
